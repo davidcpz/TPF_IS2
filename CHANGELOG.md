@@ -1,0 +1,16 @@
+# Changelog
+
+Todos los cambios importantes del proyecto se registran en este archivo.
+
+El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/)
+y el proyecto usa [Versionado Semántico](https://semver.org/lang/es/).
+
+## [Sin publicar]
+
+## [0.1.0] - 2026-10-17
+
+### Agregado
+
+- Esqueleto del proyecto generado con CookieCutter.
+- Configuración de pytest, ruff, black, mypy, pyright y bandit en `pyproject.toml`.
+- Archivos `README.md`, `CHANGELOG.md`, `CONTEXT.md`, `LICENSE` (MIT), `VERSION` y `BUILD`.

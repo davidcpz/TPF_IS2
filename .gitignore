@@ -1,0 +1,32 @@
+# ---------- Secretos: NUNCA se suben ----------
+*credentials*.json
+.aws/
+.env
+
+# ---------- Entornos virtuales ----------
+.venv/
+venv/
+
+# ---------- Archivos generados por Python ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# ---------- Herramientas de calidad y tests ----------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ---------- Documentación generada por pdoc ----------
+docs/api/
+
+# ---------- Editor y sistema operativo ----------
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

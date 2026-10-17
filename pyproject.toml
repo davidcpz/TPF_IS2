@@ -1,0 +1,73 @@
+# Configuración central del proyecto y de todas las herramientas de calidad.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "corporate_data_server"
+version = "0.1.0"
+description = "Servidor de datos corporativos con patrones Singleton, Observer y Proxy sobre AWS DynamoDB (TPFI IS2 UADER-FCyT)"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Claudio David Pereyra", email = "cdavidp1@hotmail.com" }]
+requires-python = ">=3.11"
+dependencies = ["boto3>=1.34"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ---------- pytest + cobertura ----------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+
+# ---------- ruff: estilo PEP 8 y docstrings PEP 257 ----------
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "B", "UP", "D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+# ---------- black: formato ----------
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+# ---------- mypy: tipos ----------
+[tool.mypy]
+python_version = "3.11"
+files = ["src", "tests"]
+mypy_path = "src"
+disallow_untyped_defs = true
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+
+[[tool.mypy.overrides]]
+module = ["boto3.*", "botocore.*", "moto.*"]
+ignore_missing_imports = true
+
+# ---------- pyright: tipos ----------
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.11"
+typeCheckingMode = "standard"
+
+# ---------- bandit: seguridad ----------
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
