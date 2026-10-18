@@ -11,6 +11,10 @@ y el proyecto usa [Versionado Semántico](https://semver.org/lang/es/).
 
 - Diagramas UML de actividad (proxy) y de estados (observer) en `docs/uml`, hechos con draw.io.
 
+
+- Patrón Singleton (`SingletonMeta`) y clases de acceso a las tablas `CorporateData` y `CorporateLog`, con tests.
+
+
 ## [0.1.0] - 2026-10-17
 
 ### Agregado
