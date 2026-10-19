@@ -8,7 +8,13 @@ devuelven esa misma instancia.
 from __future__ import annotations
 
 import threading
-from typing import Any, ClassVar
+from typing import Any
+
+# Instancias únicas ya creadas, una por clase, y el candado que las protege.
+# Se guardan a nivel de módulo (y no como atributos de la metaclase) para que
+# no aparezcan como si fueran atributos de cada clase Singleton.
+_instances: dict[type, Any] = {}
+_lock = threading.Lock()
 
 
 class SingletonMeta(type):
@@ -18,17 +24,14 @@ class SingletonMeta(type):
     un candado (lock) asegura que solo uno de ellos la cree.
     """
 
-    _instances: ClassVar[dict[type, Any]] = {}
-    _lock: ClassVar[threading.Lock] = threading.Lock()
-
     def __call__(cls, *args: Any, **kwargs: Any) -> Any:
         """Devuelve la instancia única de la clase, creándola la primera vez."""
-        with cls._lock:
-            if cls not in cls._instances:
-                cls._instances[cls] = super().__call__(*args, **kwargs)
-        return cls._instances[cls]
+        with _lock:
+            if cls not in _instances:
+                _instances[cls] = super().__call__(*args, **kwargs)
+        return _instances[cls]
 
     def reset_instance(cls) -> None:
         """Descarta la instancia guardada; se usa en los tests."""
-        with cls._lock:
-            cls._instances.pop(cls, None)
+        with _lock:
+            _instances.pop(cls, None)

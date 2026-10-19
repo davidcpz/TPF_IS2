@@ -1,0 +1,62 @@
+# Integración continua: en cada push o pull request a main, GitHub instala
+# el proyecto en una máquina limpia y corre todos los controles de calidad.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  calidad:
+    name: Tests y calidad
+    runs-on: ubuntu-latest
+
+    env:
+      # Los tests no usan AWS (tablas en memoria), pero boto3 necesita
+      # una región configurada para poder crearse.
+      AWS_DEFAULT_REGION: us-east-1
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependencias y el paquete
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Estilo (ruff)
+        run: ruff check .
+
+      - name: Formato (black)
+        run: black --check .
+
+      - name: Tipos (mypy)
+        run: mypy
+
+      - name: Tipos (pyright)
+        run: pyright
+
+      - name: Seguridad (bandit)
+        run: bandit -c pyproject.toml -r src
+
+      - name: Tests y cobertura (mínimo 85%)
+        run: pytest --cov=corporate_data_server --cov-report=term-missing
+
+      - name: Generar documentación (pdoc)
+        run: pdoc corporate_data_server -o docs/api
+
+      - name: Guardar la documentación
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentacion-api
+          path: docs/api

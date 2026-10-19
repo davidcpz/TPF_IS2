@@ -22,12 +22,18 @@ y el proyecto usa [Versionado Semántico](https://semver.org/lang/es/).
 - `ejemplos/`: archivos de pedido de ejemplo (get, list, set).
 - Tests de los clientes y de `cli.py` (servidor de prueba con tablas en memoria,
   casos de servidor caído y reconexión): 131 tests, cobertura 97%.
+- Integración continua con GitHub Actions (`.github/workflows/ci.yml`): en cada
+  push corre ruff, black, mypy, pyright, bandit, pytest con cobertura y genera
+  la documentación con pdoc.
+- Documentación de la API generada con pdoc (`pdoc corporate_data_server -o docs/api`).
 
 ### Corregido
 
 - ObserverClient: Ctrl+C no cortaba el programa en Windows mientras esperaba
   notificaciones; ahora espera de a 0,5 segundos.
 - Servidor: `-v` mostraba los mensajes internos de boto3/botocore.
+- Singleton: los atributos internos de la metaclase aparecían como atributos de
+  cada clase y generaban advertencias en pdoc; ahora se guardan a nivel de módulo.
 
 ## [0.1.0] - 2026-10-17
 
