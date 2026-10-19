@@ -15,6 +15,8 @@ y el proyecto usa [Versionado Semántico](https://semver.org/lang/es/).
 
 - Protocolo de mensajes JSON por línea, patrón Observer (`Subject`) y patrón Proxy (`CorporateDataProxy`), con tests.
 
+- Servidor TCP `singletonproxyobserver.py` con un hilo por cliente, argumentos `-p` y `-v`, y tests con sockets reales.
+
 ## [0.1.0] - 2026-10-17
 
 ### Agregado

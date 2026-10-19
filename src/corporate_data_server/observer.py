@@ -41,7 +41,11 @@ class SocketObserver(Observer):
         self.conn.sendall(encode(message))
 
     def close(self) -> None:
-        """Cierra el socket del cliente."""
+        """Avisa el corte al cliente y cierra el socket."""
+        try:
+            self.conn.shutdown(socket.SHUT_RDWR)
+        except OSError:
+            pass  # el socket ya estaba cortado
         self.conn.close()
 
 
