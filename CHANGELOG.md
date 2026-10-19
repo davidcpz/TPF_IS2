@@ -20,6 +20,8 @@ y el proyecto usa [Versionado Semántico](https://semver.org/lang/es/).
 - `cli.py`: validación de argumentos compartida (formato `-p=8080`) y logging
   con `-v` solo para el código propio.
 - `ejemplos/`: archivos de pedido de ejemplo (get, list, set).
+- Tests de los clientes y de `cli.py` (servidor de prueba con tablas en memoria,
+  casos de servidor caído y reconexión): 131 tests, cobertura 97%.
 
 ### Corregido
 
