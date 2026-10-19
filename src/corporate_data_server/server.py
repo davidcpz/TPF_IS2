@@ -10,12 +10,12 @@ from __future__ import annotations
 import argparse
 import logging
 import socket
-import sys
 import threading
 import uuid
 from collections.abc import Sequence
 from typing import Any
 
+from corporate_data_server.cli import configure_logging, port_type
 from corporate_data_server.observer import SocketObserver, Subject
 from corporate_data_server.protocol import decode, encode
 from corporate_data_server.proxy import CorporateDataProxy, error_response
@@ -165,41 +165,15 @@ class CorporateServer:
 # ---------- Programa principal ----------
 
 
-def _strip_equals(value: str) -> str:
-    """Permite escribir los argumentos como -p=8080 además de -p 8080."""
-    return value[1:] if value.startswith("=") else value
-
-
-def _port(value: str) -> int:
-    """Valida que el puerto sea un número entre 1 y 65535."""
-    try:
-        port = int(_strip_equals(value))
-    except ValueError:
-        raise argparse.ArgumentTypeError(f"puerto inválido: {value!r}") from None
-    if not 1 <= port <= 65535:
-        raise argparse.ArgumentTypeError(f"puerto fuera de rango: {port}")
-    return port
-
-
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     """Interpreta los argumentos: {-p=port} {-v}."""
     parser = argparse.ArgumentParser(
         prog="singletonproxyobserver.py",
         description="Servidor de datos corporativos (Singleton, Proxy, Observer).",
     )
-    parser.add_argument("-p", "--port", type=_port, default=DEFAULT_PORT)
+    parser.add_argument("-p", "--port", type=port_type, default=DEFAULT_PORT)
     parser.add_argument("-v", "--verbose", action="store_true")
     return parser.parse_args(argv)
-
-
-def configure_logging(verbose: bool) -> None:
-    """Muestra los mensajes por salida estándar; con -v incluye los de debug."""
-    logging.basicConfig(
-        level=logging.DEBUG if verbose else logging.INFO,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        stream=sys.stdout,
-        force=True,
-    )
 
 
 def build_server(port: int) -> CorporateServer:
