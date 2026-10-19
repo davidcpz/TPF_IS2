@@ -7,6 +7,11 @@ y el proyecto usa [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+## [1.0.0] - 2026-10-19
+
+Primera versión completa: servidor, clientes, tests, controles de calidad,
+documentación e integración continua.
+
 ### Agregado
 
 - Diagramas UML de actividad (proxy) y de estados (observer) en `docs/uml`, hechos con draw.io.
@@ -26,6 +31,8 @@ y el proyecto usa [Versionado Semántico](https://semver.org/lang/es/).
   push corre ruff, black, mypy, pyright, bandit, pytest con cobertura y genera
   la documentación con pdoc.
 - Documentación de la API generada con pdoc (`pdoc corporate_data_server -o docs/api`).
+- `README.md` con instalación, uso de los tres programas, protocolo y calidad.
+- `CONTEXT.md` con el registro del uso de herramientas de IA.
 
 ### Corregido
 
@@ -42,4 +49,3 @@ y el proyecto usa [Versionado Semántico](https://semver.org/lang/es/).
 - Esqueleto del proyecto generado con CookieCutter.
 - Configuración de pytest, ruff, black, mypy, pyright y bandit en `pyproject.toml`.
 - Archivos `README.md`, `CHANGELOG.md`, `CONTEXT.md`, `LICENSE` (MIT), `VERSION` y `BUILD`.
-
