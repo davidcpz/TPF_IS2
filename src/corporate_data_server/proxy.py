@@ -120,12 +120,22 @@ class CorporateDataProxy:
         item_id: str,
         request: dict[str, Any],
     ) -> dict[str, Any]:
+        """Guarda los cambios y notifica; si los datos son iguales, solo avisa."""
         self._log.log(client_uuid, session_id, "set", item_id=item_id)
         fields = {
             key: value
             for key, value in request.items()
             if key not in REQUEST_KEYS and key != "id"
         }
+        current = self._data.get(item_id)
+        if current is not None and all(
+            current.get(key) == value for key, value in fields.items()
+        ):
+            logger.debug("Registro %s sin cambios; no se notifica", item_id)
+            return {
+                "Aviso": f"No se realizó ningún cambio en el registro {item_id}",
+                "registro": current,
+            }
         record = self._data.upsert(item_id, fields)
         notified = self._subject.notify(record)
         logger.debug("Registro %s actualizado; %d notificados", item_id, notified)

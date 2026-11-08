@@ -123,8 +123,14 @@ class ObserverClient:
                 yield line + b"\n"
 
     def _handle(self, message: Any) -> None:
-        """Muestra la notificación y, si se pidió, la guarda en el archivo."""
+        """Avisa que llegó un cambio, lo muestra y, si se pidió, lo guarda."""
         self.received += 1
+        registro = message.get("id") if isinstance(message, dict) else "?"
+        logger.info(
+            "Se realizó un cambio en el registro %s (aviso %d)",
+            registro,
+            self.received,
+        )
         text = json.dumps(message, indent=2, ensure_ascii=False)
         print(text, flush=True)
         if self.output is not None:

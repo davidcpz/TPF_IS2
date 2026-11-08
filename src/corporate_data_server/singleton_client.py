@@ -76,6 +76,15 @@ def format_response(response: Any) -> str:
     return json.dumps(response, indent=2, ensure_ascii=False)
 
 
+def describe_set(request: dict[str, Any], response: Any) -> str | None:
+    """Indica si un set realizó un cambio; None para las demás acciones."""
+    if str(request.get("ACTION", "")).lower() != "set":
+        return None
+    if isinstance(response, dict) and "Aviso" in response:
+        return str(response["Aviso"])
+    return f"Se realizó un cambio en el registro {request.get('ID')}"
+
+
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     """Interpreta los argumentos: -i=input.json {-o=output.json} {-v}."""
     parser = argparse.ArgumentParser(
@@ -111,4 +120,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         logger.info("Respuesta guardada en %s", args.output)
     else:
         print(text)
-    return 1 if isinstance(response, dict) and "Error" in response else 0
+    if isinstance(response, dict) and "Error" in response:
+        return 1
+    result = describe_set(request, response)
+    if result:
+        logger.info("%s", result)
+    return 0

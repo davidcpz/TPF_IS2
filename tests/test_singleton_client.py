@@ -156,3 +156,17 @@ def test_argumentos_malformados(argv: list[str]) -> None:
     with pytest.raises(SystemExit) as salida:
         parse_args(argv)
     assert salida.value.code == 2
+
+
+def test_main_set_informa_si_hubo_cambios(
+    servidor: ServidorDePrueba, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Main informa si el set realizó un cambio o si los datos eran iguales."""
+    pedido = {"ACTION": "set", "ID": REGISTRO_INICIAL["id"], "cp": "3100"}
+    argv = ["-p", str(servidor.port), "-s", "127.0.0.1"]
+
+    assert main(["-i", str(escribir(tmp_path, pedido, "a.json")), *argv]) == 0
+    assert "Se realizó un cambio" in capsys.readouterr().out
+
+    assert main(["-i", str(escribir(tmp_path, pedido, "b.json")), *argv]) == 0
+    assert "No se realizó ningún cambio" in capsys.readouterr().out

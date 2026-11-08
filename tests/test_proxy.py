@@ -249,3 +249,17 @@ def test_error_de_base_de_datos_devuelve_error(entorno: Entorno) -> None:
     entorno.data.scan = falla  # type: ignore[method-assign]
     respuesta = entorno.proxy.process(pedido("list"), SESION)
     assert respuesta == {"Error": "Error de acceso a la base de datos"}
+
+
+def test_set_sin_cambios_avisa_y_no_notifica(entorno: Entorno) -> None:
+    """Un set con los mismos datos no escribe ni notifica, pero se audita."""
+    suscriptor = Suscriptor()
+    entorno.sujeto.attach(suscriptor)
+    respuesta = entorno.proxy.process(
+        pedido("set", ID=REGISTRO["id"], sede=REGISTRO["sede"]), SESION
+    )
+    assert "No se realizó ningún cambio" in respuesta["Aviso"]
+    assert respuesta["registro"] == REGISTRO
+    assert suscriptor.recibidos == []
+    assert "CorporateData.put_item" not in entorno.historial
+    assert entorno.logs()[0]["action"] == "set"
